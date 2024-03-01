@@ -1,5 +1,15 @@
 package com.Hayrama.repository;
 
-public class TestRepository extends JpaRepository<Test, Long>{
+import com.Hayrama.models.Test;
 
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface TestRepository extends JpaRepository<Test, Integer>{
+    @Query(value = "SELECT * from test ",nativeQuery = true)
+    List<Test> getAll();
 }

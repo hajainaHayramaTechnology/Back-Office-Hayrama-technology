@@ -1,22 +1,23 @@
 package com.Hayrama.models;
  
 import java.sql.Date;
+import javax.persistence.Column;
 
-import org.springframework.data.annotation.Id;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 
 @Entity
+@Table(name = "Test")
 public class Test{
-	
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+        
+    @Id
+    @Column(name = "idTest", unique = true , nullable = false )
+	private int idTest;
+    
+    @Column(name = "nom", nullable = false )
 	private String nom;
+    
+    @Column(name = "date", nullable = false )
 	private Date date;
 	
 	
@@ -28,17 +29,17 @@ public class Test{
 
 	public Test(int id, String nom, Date date) {
 		super();
-		this.id = id;
+		this.idTest = id;
 		this.nom = nom;
 		this.date = date;
 	}
 
 	public int getId() {
-		return id;
+		return idTest;
 	}
 
 	public void setId(int id) {
-		this.id = id;
+		this.idTest = id;
 	}
 
 	public String getNom() {
@@ -56,7 +57,12 @@ public class Test{
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	
-	
-	
+
+    public int getIdTest() {
+        return idTest;
+    }
+
+    public void setIdTest(int idTest) {
+        this.idTest = idTest;
+    }
 }
