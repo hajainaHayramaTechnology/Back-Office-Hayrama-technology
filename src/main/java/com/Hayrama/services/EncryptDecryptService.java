@@ -1,9 +1,8 @@
 package com.Hayrama.services;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Service;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 
 @Service
@@ -13,37 +12,33 @@ public class EncryptDecryptService {
 	
 	public static String encryptStandard(String inputData) {
         try {
-            SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "AES");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "AES");
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
-
-            byte[] encryptedBytes = cipher.doFinal(inputData.getBytes(StandardCharsets.UTF_8));
-            return Base64.getEncoder().encodeToString(encryptedBytes);
+            byte[] encryptedBytes = cipher.doFinal(inputData.getBytes());
+            return Base64.encodeBase64String(encryptedBytes);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Encryption error: " + e.getMessage());
             return null;
         }
     }
 
 	public static String decryptStandard(String inputData) {
         try {
-            SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "AES");
+            byte[] decodedKey = secretKey.getBytes();
+            SecretKeySpec secretKeySpec = new SecretKeySpec(decodedKey, "AES");
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
-
-            byte[] decodedBytes = Base64.getDecoder().decode(inputData);
-            byte[] decryptedBytes = cipher.doFinal(decodedBytes);
-            return new String(decryptedBytes, StandardCharsets.UTF_8);
+            byte[] decryptedBytes = cipher.doFinal(Base64.decodeBase64(inputData));
+            return new String(decryptedBytes, "UTF-8");
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Decryption error: " + e.getMessage());
             return null;
         }
     }
 
-
 	public static String permuterTroisDerniers(String str) {
         if (str.length() % 3 == 0) {
-            // Diviser la chaîne en trois parties égales
             String partie1 = str.substring(0, str.length() / 3);
             String partie2 = str.substring(str.length() / 3, (2 * str.length()) / 3);
             String partie3 = str.substring((2 * str.length()) / 3);

@@ -1,5 +1,6 @@
 package com.Hayrama.controllers;
 
+import com.Hayrama.models.EncrytDecrypt;
 import com.Hayrama.services.EncryptDecryptService;
 import com.Hayrama.utils.EnumMessages;
 import com.Hayrama.utils.ReponseHttp;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(value="/api")
 public class EncryptDecryptController {
@@ -30,9 +32,11 @@ public class EncryptDecryptController {
     }
     
     @GetMapping("/decrypt")
-    public ResponseEntity<ReponseHttp> decrypt(@RequestParam(name = "data") String data) {
+    public ResponseEntity<ReponseHttp> decrypt(@RequestBody EncrytDecrypt data) {
         try {
-        	String response = this.encryptDecryotSercice.decryptStandard(data);
+        	String content = data.getData();
+        	System.out.println("content: "+ content);
+        	String response = this.encryptDecryotSercice.decryptStandard(content);
         	ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),response);
         return new ResponseEntity<>(rep, HttpStatus.OK);
         } catch (Exception e) {
