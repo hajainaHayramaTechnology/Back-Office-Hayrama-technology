@@ -1,68 +1,31 @@
 package com.Hayrama.models;
  
 import java.sql.Date;
-import javax.persistence.Column;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Data
 @Entity
-@Table(name = "Test")
+@Table(name = "Tests")
 public class Test{
         
-    @Id
-    @Column(name = "idTest", unique = true , nullable = false )
-	private int idTest;
-    
-    @Column(name = "nom", nullable = false )
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonProperty("idTest")
+	private Long idTest;
 	private String nom;
-    
-    @Column(name = "date", nullable = false )
 	private Date date;
-	
-	
-
-	public Test() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public Test(int id, String nom, Date date) {
-		super();
-		this.idTest = id;
-		this.nom = nom;
-		this.date = date;
-	}
-
-	public int getId() {
-		return idTest;
-	}
-
-	public void setId(int id) {
-		this.idTest = id;
-	}
-
-	public String getNom() {
-		return nom;
-	}
-
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-    public int getIdTest() {
-        return idTest;
-    }
-
-    public void setIdTest(int idTest) {
-        this.idTest = idTest;
-    }
 }

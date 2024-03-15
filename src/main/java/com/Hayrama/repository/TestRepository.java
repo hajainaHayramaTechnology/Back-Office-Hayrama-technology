@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TestRepository extends JpaRepository<Test, Integer>{
+public interface TestRepository extends JpaRepository<Test, Long>{
     @Query(value = "SELECT * from test ",nativeQuery = true)
     List<Test> getAll();
 }
