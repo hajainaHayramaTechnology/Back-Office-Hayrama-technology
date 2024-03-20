@@ -26,29 +26,15 @@ public class TestController{
     private EncryptDecryptService encryptDecryptService;
     
     private UtilityServices utilityServices;
-
-
-    @GetMapping("/test")
-    public ResponseEntity<ReponseHttp> test() {
-    	try{
-    		List<Test> tests = this.testService.getAll();
-    		List<Map<String, Object>> arrayTest = this.testService.convertTestsToMapArray(tests);
-    		System.out.println("arrayTest: " + arrayTest);
-    		ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),this.encryptDecryptService.encrytObject(arrayTest));
-        return new ResponseEntity<>(rep, HttpStatus.OK);
-        } catch (Exception e) {
-                e.printStackTrace();
-                ReponseHttp rep = new ReponseHttp(e.getMessage(),null);
-                return new ResponseEntity<ReponseHttp>(rep, HttpStatus.BAD_REQUEST);
-        }finally {
-        }
-    }
     
     @GetMapping("/select")
     public ResponseEntity<ReponseHttp> selectTest() {
         try{
-        ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),this.testService.getAll());
-        return new ResponseEntity<>(rep, HttpStatus.OK);
+	    	List<Test> tests = this.testService.getAll();
+			List<Map<String, Object>> arrayTest = this.testService.convertTestsToMapArray(tests);
+			System.out.println("arrayTest: " + arrayTest);
+			ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),this.encryptDecryptService.encrytObject(arrayTest));
+	        return new ResponseEntity<>(rep, HttpStatus.OK);
         } catch (Exception e) {
                 e.printStackTrace();
                 ReponseHttp rep = new ReponseHttp(e.getMessage(),null);
@@ -58,9 +44,13 @@ public class TestController{
     }
     
     @PostMapping("/insert")
-    public ResponseEntity<ReponseHttp> insert(@RequestBody Test test ) {
+    public ResponseEntity<ReponseHttp> insert(@RequestBody Map<String, Object> test ) {
         try{
-        ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),this.testService.save(test));
+        	System.out.println("test: " + test);
+        	Map<String, Object> object = this.encryptDecryptService.decryptTestStruct(test);
+        	Test testObject = new Test();
+        	testObject = this.testService.convertHashMaoToTests(object);
+	        ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),testObject);
         return new ResponseEntity<>(rep, HttpStatus.OK);
         } catch (Exception e) {
                 e.printStackTrace();

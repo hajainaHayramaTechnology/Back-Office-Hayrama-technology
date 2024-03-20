@@ -3,6 +3,7 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Service;
 
 import com.Hayrama.models.EncrytDecrypt;
+import com.Hayrama.models.Test;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -18,17 +19,22 @@ public class EncryptDecryptService {
 	
 	private static final String secretKey = "1234567890123456";
 	
-	public static EncrytDecrypt crypyJson(String inputData) {
+	public Map<String, Object> decryptTestStruct(Map<String, Object> objects) {
         try {
-            SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "AES");
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
-            byte[] encryptedBytes = cipher.doFinal(inputData.getBytes());
-            String result = Base64.encodeBase64String(encryptedBytes);
-            System.out.println("result : " + result );
-            EncrytDecrypt object = new EncrytDecrypt();
-            object = permuter(result);
-            return object;
+        	Map<String, Object> result = new HashMap<>();
+        	Map<String, Object> partie = new HashMap<>();
+        	for (String cle : objects.keySet()) {
+        		System.out.println("cle: " + cle);
+        		partie = (Map<String, Object>) objects.get(cle);
+        		System.out.println("partie: " + partie);
+        		EncrytDecrypt encrytDecrypt = new EncrytDecrypt();
+        		encrytDecrypt.setPartie1(partie.get("partie1").toString());
+        		encrytDecrypt.setPartie2(partie.get("partie2").toString());
+        		encrytDecrypt.setPartie3(partie.get("partie3").toString());
+        		result.put(cle, decryptStandard(encrytDecrypt));
+        		System.out.println("result: " + result);
+        	}
+            return result;
         } catch (Exception e) {
             System.err.println("Encryption error: " + e.getMessage());
             return null;
@@ -165,7 +171,7 @@ public class EncryptDecryptService {
 			Map<String, Object> testMap = new HashMap<>();
 			for (String cle : map.keySet()) {
 				EncrytDecrypt encrytDecrypt = new EncrytDecrypt();
-				testMap.put(cle, decryptStandard(encrytDecrypt);
+				testMap.put(cle, decryptStandard(encrytDecrypt));
 			}
 			resultList.add(testMap);
 			System.out.println("objetJson: " + objetJson);			

@@ -1,8 +1,10 @@
 package com.Hayrama.services;
 
+import com.Hayrama.models.EncrytDecrypt;
 import com.Hayrama.models.Test;
 import com.Hayrama.repository.TestRepository;
 import java.util.List;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,9 @@ public class TestService {
 	
 	@Autowired
 	private TestRepository testRepo;
+	
+	@Autowired
+	private EncryptDecryptService encryptDecryptService;
 
 	public Test save(Test entity) {
 		return testRepo.save(entity);
@@ -58,5 +63,15 @@ public class TestService {
             System.out.println("convertTestsToMapArray: " + resultList);
         }
         return resultList;
+    }
+	
+	public Test convertHashMaoToTests(Map<String, Object> object) {
+		Test test = new Test();
+		Object idObject = object.get("id");
+		if (object.get("id") instanceof Long) {
+	        test.setIdTest((Long) idObject);
+	    }
+        test.setNom((String) object.get("nom"));
+        return test;
     }
 }
