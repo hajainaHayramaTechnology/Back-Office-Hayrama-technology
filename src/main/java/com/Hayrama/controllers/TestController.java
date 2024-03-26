@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(value="/test")
 public class TestController{
@@ -65,6 +66,19 @@ public class TestController{
         try{
         ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),this.testService.save(test));
         return new ResponseEntity<>(rep, HttpStatus.OK);
+        } catch (Exception e) {
+                e.printStackTrace();
+                ReponseHttp rep = new ReponseHttp(e.getMessage(),null);
+                return new ResponseEntity<ReponseHttp>(rep, HttpStatus.BAD_REQUEST);
+        }finally {
+        }
+    }
+    
+    @GetMapping("/selectSansEncrypt")
+    public ResponseEntity<ReponseHttp> selectSansEncrypt() {
+        try{
+			ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),this.testService.getAll());
+	        return new ResponseEntity<>(rep, HttpStatus.OK);
         } catch (Exception e) {
                 e.printStackTrace();
                 ReponseHttp rep = new ReponseHttp(e.getMessage(),null);

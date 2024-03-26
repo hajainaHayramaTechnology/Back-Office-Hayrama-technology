@@ -11,7 +11,7 @@ public class WebConfigue implements WebMvcConfigurer {
 	
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("api/**") // L'URL de votre API
+		registry.addMapping("backHayrama/api/**") // L'URL de votre API
 				.allowedOrigins("http://localhost:8721") // L'URL de votre application Angular
 				.allowedMethods("OPTIONS", "POST", "GET", "PUT", "DELETE") // Méthodes HTTP autorisées
 				.allowedHeaders("*") // En-têtes autorisés
