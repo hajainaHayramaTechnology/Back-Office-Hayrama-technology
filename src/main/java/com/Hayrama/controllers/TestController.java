@@ -51,6 +51,7 @@ public class TestController{
         	Map<String, Object> object = this.encryptDecryptService.decryptTestStruct(test);
         	Test testObject = new Test();
         	testObject = this.testService.convertHashMaoToTests(object);
+        	this.testService.save(testObject);
 	        ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),testObject);
         return new ResponseEntity<>(rep, HttpStatus.OK);
         } catch (Exception e) {

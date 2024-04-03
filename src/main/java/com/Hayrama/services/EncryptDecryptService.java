@@ -22,16 +22,10 @@ public class EncryptDecryptService {
 	public Map<String, Object> decryptTestStruct(Map<String, Object> objects) {
         try {
         	Map<String, Object> result = new HashMap<>();
-        	Map<String, Object> partie = new HashMap<>();
         	for (String cle : objects.keySet()) {
         		System.out.println("cle: " + cle);
-        		partie = (Map<String, Object>) objects.get(cle);
-        		System.out.println("partie: " + partie);
-        		EncrytDecrypt encrytDecrypt = new EncrytDecrypt();
-        		encrytDecrypt.setPartie1(partie.get("partie1").toString());
-        		encrytDecrypt.setPartie2(partie.get("partie2").toString());
-        		encrytDecrypt.setPartie3(partie.get("partie3").toString());
-        		result.put(cle, decryptStandard(encrytDecrypt));
+        		System.out.println("objects.get(cle): " + objects.get(cle));
+        		result.put(cle, decryptStandard((String) objects.get(cle)));
         		System.out.println("result: " + result);
         	}
             return result;
@@ -41,30 +35,30 @@ public class EncryptDecryptService {
         }
     }
 	
-	public static EncrytDecrypt encryptStandard(String inputData) {
+	public static String encryptStandard(String inputData) {
         try {
             SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "AES");
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
             byte[] encryptedBytes = cipher.doFinal(inputData.getBytes());
             String result = Base64.encodeBase64String(encryptedBytes);
-            EncrytDecrypt objet = new EncrytDecrypt();
-            objet = permuter(result);
-            return objet;
+            System.out.println("result : " + result );
+            result = permuter(result);
+            return result;
         } catch (Exception e) {
             System.err.println("Encryption error: " + e.getMessage());
             return null;
         }
     }
 
-	public static String decryptStandard(EncrytDecrypt inputData) {
+	public static String decryptStandard(String inputData) {
         try {
-        	String resolvePermutation = resolvePermutation(inputData);
+        	inputData = resolvePermutation(inputData);
             byte[] decodedKey = secretKey.getBytes();
             SecretKeySpec secretKeySpec = new SecretKeySpec(decodedKey, "AES");
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
-            byte[] decryptedBytes = cipher.doFinal(Base64.decodeBase64(resolvePermutation));
+            byte[] decryptedBytes = cipher.doFinal(Base64.decodeBase64(inputData));
             return new String(decryptedBytes, "UTF-8");
         } catch (Exception e) {
             System.err.println("Decryption error: " + e.getMessage());
@@ -72,11 +66,10 @@ public class EncryptDecryptService {
         }
     }
 	
-	public static EncrytDecrypt encryptFix(String inputData) {
+	public static String encryptFix(String inputData) {
         try {
             inputData = "fh1" + inputData + "nt";
-            EncrytDecrypt result = new EncrytDecrypt();
-            result = encryptStandard(inputData);
+            String result = encryptStandard(inputData);
             return result;
         } catch (Exception e) {
             System.err.println("Encryption error: " + e.getMessage());
@@ -84,11 +77,11 @@ public class EncryptDecryptService {
         }
     }
 	
-	public static String decryptFix(EncrytDecrypt data) {
+	public static String decryptFix(String inputData) {
         try {
-        	String result = decryptStandard(data);
-        	result = result.substring(0, 3);
-        	result = result.substring(result.length() - 2);
+            inputData = inputData.substring(0, 3);
+            inputData = inputData.substring(inputData.length() - 2);
+            String result = decryptStandard(inputData);
             return result;
         } catch (Exception e) {
             System.err.println("Encryption error: " + e.getMessage());
@@ -96,13 +89,13 @@ public class EncryptDecryptService {
         }
     }
 
-	public static EncrytDecrypt permuter(String str) {
+	public static String permuter(String str) {
 		if (str.length() < 9) {
 	        System.out.println("La longueur de la chaîne est inférieure à 9 et ne peut pas être divisée en trois parties de longueur égale.");
 	        return null;
 	    }
     	String result = "";
-    	
+    	System.out.println("String : " + str );
         String partie1 = str.substring(0, str.length() / 3);
         String partie2 = str.substring(str.length() / 3, (2 * str.length()) / 3);
         String partie3 = str.substring((2 * str.length()) / 3);
@@ -113,27 +106,29 @@ public class EncryptDecryptService {
         String sansTroisDerniers1 = partie1.replace(troisDerniersPartie1, "");
         String sansTroisDerniers2 = partie2.replace(troisDerniersPartie2, "");
         String sansTroisDerniers3 = partie3.replace(troisDerniersPartie3, "");
-        
+        System.out.println("Parties : [" + partie1 + "] [" + partie2 + "] [" + partie3 + "]");
+        System.out.println("Trois Derniers Parties : [" + troisDerniersPartie1 + "] [" + troisDerniersPartie2 + "] [" + troisDerniersPartie3 + "]");
+        System.out.println("Sans Trois Derniers Parties : [" + sansTroisDerniers1 + "] [" + sansTroisDerniers2 + "] [" + sansTroisDerniers3 + "]");
         partie1 = troisDerniersPartie2 + sansTroisDerniers1;
         partie2 = troisDerniersPartie3 + sansTroisDerniers2;
         partie3 = troisDerniersPartie1 + sansTroisDerniers3;
         
-        EncrytDecrypt objet = new EncrytDecrypt();
-        objet.setPartie1(partie1);
-        objet.setPartie2(partie2);
-        objet.setPartie3(partie3);
-        
         result = partie1 + partie2 + partie3;
-        
-        return objet;
+        System.out.println("Parties Apres : [" + partie1 + "] [" + partie2 + "] [" + partie3 + "]");
+
+        return result;
     }
 	
-	public static String resolvePermutation(EncrytDecrypt objet) {
+	public static String resolvePermutation(String str) {
+		if (str.length() < 9) {
+	        System.out.println("La longueur de la chaîne est inférieure à 9 et ne peut pas être divisée en trois parties de longueur égale.");
+	        return null;
+	    }
     	String result = "";
-    	
-    	String partie1 = objet.getPartie1();
-        String partie2 = objet.getPartie2();
-        String partie3 = objet.getPartie3();
+    	System.out.println("resolvePermutation : " + str );
+        String partie1 = str.substring(0, str.length() / 3);
+        String partie2 = str.substring(str.length() / 3, (2 * str.length()) / 3);
+        String partie3 = str.substring((2 * str.length()) / 3);
         
         String troisPremierPartie1 = partie1.substring(0,3);
         String troisPremierPartie2 = partie2.substring(0,3);
@@ -142,13 +137,16 @@ public class EncryptDecryptService {
         String sansTroisPremier1 = partie1.replace(troisPremierPartie1, "");
         String sansTroisPremier2 = partie2.replace(troisPremierPartie2, "");
         String sansTroisPremier3 = partie3.replace(troisPremierPartie3, "");
-        
+        System.out.println("Parties : [" + partie1 + "] [" + partie2 + "] [" + partie3 + "]");
+        System.out.println("Trois Derniers Parties : [" + troisPremierPartie1 + "] [" + troisPremierPartie2 + "] [" + troisPremierPartie3 + "]");
+        System.out.println("Sans Trois Derniers Parties : [" + sansTroisPremier1 + "] [" + sansTroisPremier2 + "] [" + sansTroisPremier3 + "]");
         partie1 = sansTroisPremier1 + troisPremierPartie3;
         partie2 = sansTroisPremier2 + troisPremierPartie1;
         partie3 = sansTroisPremier3 + troisPremierPartie2;
         
         result = partie1 + partie2 + partie3;
-        
+        System.out.println("Parties Apres : [" + partie1 + "] [" + partie2 + "] [" + partie3 + "]");
+
         return result;
     }
 	
@@ -170,8 +168,8 @@ public class EncryptDecryptService {
 		for (Map<String, Object> map : objetJson) {
 			Map<String, Object> testMap = new HashMap<>();
 			for (String cle : map.keySet()) {
-				EncrytDecrypt encrytDecrypt = new EncrytDecrypt();
-				testMap.put(cle, decryptStandard(encrytDecrypt));
+//				EncrytDecrypt encrytDecrypt = new EncrytDecrypt();
+//				testMap.put(cle, decryptStandard(encrytDecrypt));
 			}
 			resultList.add(testMap);
 			System.out.println("objetJson: " + objetJson);			
