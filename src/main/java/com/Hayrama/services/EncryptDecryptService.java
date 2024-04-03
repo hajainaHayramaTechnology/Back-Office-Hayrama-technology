@@ -23,9 +23,7 @@ public class EncryptDecryptService {
         try {
         	Map<String, Object> result = new HashMap<>();
         	for (String cle : objects.keySet()) {
-        		System.out.println("cle: " + cle);
-        		System.out.println("objects.get(cle): " + objects.get(cle));
-        		result.put(cle, decryptStandard((String) objects.get(cle)));
+        		result.put(decryptStandard(cle), decryptStandard((String) objects.get(cle)));
         		System.out.println("result: " + result);
         	}
             return result;
@@ -95,7 +93,7 @@ public class EncryptDecryptService {
 	        return null;
 	    }
     	String result = "";
-    	System.out.println("String : " + str );
+//    	System.out.println("String : " + str );
         String partie1 = str.substring(0, str.length() / 3);
         String partie2 = str.substring(str.length() / 3, (2 * str.length()) / 3);
         String partie3 = str.substring((2 * str.length()) / 3);
@@ -106,15 +104,15 @@ public class EncryptDecryptService {
         String sansTroisDerniers1 = partie1.replace(troisDerniersPartie1, "");
         String sansTroisDerniers2 = partie2.replace(troisDerniersPartie2, "");
         String sansTroisDerniers3 = partie3.replace(troisDerniersPartie3, "");
-        System.out.println("Parties : [" + partie1 + "] [" + partie2 + "] [" + partie3 + "]");
-        System.out.println("Trois Derniers Parties : [" + troisDerniersPartie1 + "] [" + troisDerniersPartie2 + "] [" + troisDerniersPartie3 + "]");
-        System.out.println("Sans Trois Derniers Parties : [" + sansTroisDerniers1 + "] [" + sansTroisDerniers2 + "] [" + sansTroisDerniers3 + "]");
+//        System.out.println("Parties : [" + partie1 + "] [" + partie2 + "] [" + partie3 + "]");
+//        System.out.println("Trois Derniers Parties : [" + troisDerniersPartie1 + "] [" + troisDerniersPartie2 + "] [" + troisDerniersPartie3 + "]");
+//        System.out.println("Sans Trois Derniers Parties : [" + sansTroisDerniers1 + "] [" + sansTroisDerniers2 + "] [" + sansTroisDerniers3 + "]");
         partie1 = troisDerniersPartie2 + sansTroisDerniers1;
         partie2 = troisDerniersPartie3 + sansTroisDerniers2;
         partie3 = troisDerniersPartie1 + sansTroisDerniers3;
         
         result = partie1 + partie2 + partie3;
-        System.out.println("Parties Apres : [" + partie1 + "] [" + partie2 + "] [" + partie3 + "]");
+//        System.out.println("Parties Apres : [" + partie1 + "] [" + partie2 + "] [" + partie3 + "]");
 
         return result;
     }
@@ -125,7 +123,7 @@ public class EncryptDecryptService {
 	        return null;
 	    }
     	String result = "";
-    	System.out.println("resolvePermutation : " + str );
+//    	System.out.println("resolvePermutation : " + str );
         String partie1 = str.substring(0, str.length() / 3);
         String partie2 = str.substring(str.length() / 3, (2 * str.length()) / 3);
         String partie3 = str.substring((2 * str.length()) / 3);
@@ -137,15 +135,15 @@ public class EncryptDecryptService {
         String sansTroisPremier1 = partie1.replace(troisPremierPartie1, "");
         String sansTroisPremier2 = partie2.replace(troisPremierPartie2, "");
         String sansTroisPremier3 = partie3.replace(troisPremierPartie3, "");
-        System.out.println("Parties : [" + partie1 + "] [" + partie2 + "] [" + partie3 + "]");
-        System.out.println("Trois Derniers Parties : [" + troisPremierPartie1 + "] [" + troisPremierPartie2 + "] [" + troisPremierPartie3 + "]");
-        System.out.println("Sans Trois Derniers Parties : [" + sansTroisPremier1 + "] [" + sansTroisPremier2 + "] [" + sansTroisPremier3 + "]");
+//        System.out.println("Parties : [" + partie1 + "] [" + partie2 + "] [" + partie3 + "]");
+//        System.out.println("Trois Derniers Parties : [" + troisPremierPartie1 + "] [" + troisPremierPartie2 + "] [" + troisPremierPartie3 + "]");
+//        System.out.println("Sans Trois Derniers Parties : [" + sansTroisPremier1 + "] [" + sansTroisPremier2 + "] [" + sansTroisPremier3 + "]");
         partie1 = sansTroisPremier1 + troisPremierPartie3;
         partie2 = sansTroisPremier2 + troisPremierPartie1;
         partie3 = sansTroisPremier3 + troisPremierPartie2;
         
         result = partie1 + partie2 + partie3;
-        System.out.println("Parties Apres : [" + partie1 + "] [" + partie2 + "] [" + partie3 + "]");
+//        System.out.println("Parties Apres : [" + partie1 + "] [" + partie2 + "] [" + partie3 + "]");
 
         return result;
     }
@@ -155,7 +153,7 @@ public class EncryptDecryptService {
 		for (Map<String, Object> map : objetJson) {
 			Map<String, Object> testMap = new HashMap<>();
 			for (String cle : map.keySet()) {
-				testMap.put(cle, encryptStandard(String.valueOf(map.get(cle))));
+				testMap.put(encryptStandard(cle), encryptStandard(String.valueOf(map.get(cle))));
 			}
 			resultList.add(testMap);
 			System.out.println("objetJson: " + objetJson);			
