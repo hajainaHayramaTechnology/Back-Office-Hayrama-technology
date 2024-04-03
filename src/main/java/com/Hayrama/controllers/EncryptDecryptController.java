@@ -2,6 +2,7 @@ package com.Hayrama.controllers;
 
 import com.Hayrama.models.EncrytDecrypt;
 import com.Hayrama.services.EncryptDecryptService;
+import com.Hayrama.services.Hashing512Service;
 import com.Hayrama.utils.EnumMessages;
 import com.Hayrama.utils.ReponseHttp;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,9 @@ public class EncryptDecryptController {
 
     @Autowired
     private EncryptDecryptService encryptDecryotSercice;
+    
+    @Autowired
+    private Hashing512Service hashing512Service;
     
     @PostMapping("/encrypt")
     public ResponseEntity<ReponseHttp> encrypt(@RequestBody List<Map<String, Object>> arrayData) {
@@ -40,6 +44,20 @@ public class EncryptDecryptController {
         try {
         	Map<String, Object> object = this.encryptDecryotSercice.decryptTestStruct(data);
         	ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),object);
+        return new ResponseEntity<>(rep, HttpStatus.OK);
+        } catch (Exception e) {
+                e.printStackTrace();
+                ReponseHttp rep = new ReponseHttp(e.getMessage(),null);
+                return new ResponseEntity<ReponseHttp>(rep, HttpStatus.BAD_REQUEST);
+        }finally {
+        }
+    }
+    
+    @GetMapping("/hashing")
+    public ResponseEntity<ReponseHttp> hashing(@RequestBody Map<String, Object> data) {
+        try {
+        	System.out.println("hashing: " + data);
+        	ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),this.hashing512Service.hashString(data.toString()));
         return new ResponseEntity<>(rep, HttpStatus.OK);
         } catch (Exception e) {
                 e.printStackTrace();
