@@ -20,8 +20,7 @@ public class EncryptDecryptController {
     @GetMapping("/encrypt")
     public ResponseEntity<ReponseHttp> encrypt(@RequestParam(name = "data") String data) {
         try {
-        	EncrytDecrypt objet = new EncrytDecrypt();
-        	objet = this.encryptDecryotSercice.encryptStandard(data);
+        	String objet = this.encryptDecryotSercice.encryptStandard(data);
         	ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),objet);
         return new ResponseEntity<>(rep, HttpStatus.OK);
         } catch (Exception e) {
@@ -33,8 +32,9 @@ public class EncryptDecryptController {
     }
     
     @GetMapping("/decrypt")
-    public ResponseEntity<ReponseHttp> decrypt(@RequestBody EncrytDecrypt data) {
+    public ResponseEntity<ReponseHttp> decrypt(@RequestBody String data) {
         try {
+        	System.out.println("data: " + data);
         	String response = this.encryptDecryotSercice.decryptStandard(data);
         	ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),response);
         return new ResponseEntity<>(rep, HttpStatus.OK);
