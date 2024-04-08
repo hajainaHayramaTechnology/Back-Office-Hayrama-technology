@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
 @Service
 public class Hashing512Service {
 	
-	 public static String hashString(String input) {
+	 public String hashString(String input) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-512");
 
@@ -21,7 +21,6 @@ public class Hashing512Service {
                 if (hex.length() == 1) hexString.append('0');
                 hexString.append(hex);
             }
-            System.out.println("hashString: " + hexString.toString());
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -29,11 +28,14 @@ public class Hashing512Service {
         }
     }
 	 
-	private static boolean verifiyHash(String hash, String data) {
+	public boolean verifiyHash(String hashHeading, String body) {
 		try {
             boolean result = false;
-            String hashData = hashString(data);
-            if(hashData == hash) {
+            String hashData = hashString(body);
+            System.out.println("data: " + hashData);
+            System.out.println("data: " + hashHeading);
+            System.out.println("compareTo: " + hashHeading.compareTo(hashData));
+            if(hashHeading.equals(hashData)) {
             	result = true;
             }
             return result;

@@ -2,6 +2,7 @@ package com.Hayrama.controllers;
 
 import com.Hayrama.models.Test;
 import com.Hayrama.services.EncryptDecryptService;
+import com.Hayrama.services.Hashing512Service;
 import com.Hayrama.services.TestService;
 import com.Hayrama.services.UtilityServices;
 import com.Hayrama.utils.EnumMessages;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,9 @@ public class TestController{
 
     @Autowired
     private TestService testService;
+    
+    @Autowired
+    private Hashing512Service hashing512Service;
     
     @Autowired
     private EncryptDecryptService encryptDecryptService;
@@ -45,14 +51,19 @@ public class TestController{
     }
     
     @PostMapping("/insert")
-    public ResponseEntity<ReponseHttp> insert(@RequestBody Map<String, Object> test ) {
+    public ResponseEntity<ReponseHttp> insert(@RequestBody Map<String, Object> test,@RequestHeader("Hash") String heading) {
         try{
-        	Map<String, Object> object = this.encryptDecryptService.decryptTestStruct(test);
-        	Test testObject = new Test();
-        	testObject = this.testService.convertHashMaoToTests(object);
+        	boolean verifyHash = this.hashing512Service.verifiyHash(heading,test.toString());
+        	if(verifyHash) {
+        		Map<String, Object> object = this.encryptDecryptService.decryptTestStruct(test);
+        		Test testObject = new Test();
+        		testObject = this.testService.convertHashMaoToTests(object);
 //        	this.testService.save(testObject);
-	        ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),testObject);
-        return new ResponseEntity<>(rep, HttpStatus.OK);
+        		ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),testObject);
+        		return new ResponseEntity<>(rep, HttpStatus.OK);
+        	}else {
+        		throw new RuntimeException("Hash verification failed please try again");
+        	}
         } catch (Exception e) {
                 e.printStackTrace();
                 ReponseHttp rep = new ReponseHttp(e.getMessage(),null);
