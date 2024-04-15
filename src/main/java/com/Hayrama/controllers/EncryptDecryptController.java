@@ -1,6 +1,5 @@
 package com.Hayrama.controllers;
 
-import com.Hayrama.models.EncrytDecrypt;
 import com.Hayrama.services.EncryptDecryptService;
 import com.Hayrama.services.Hashing512Service;
 import com.Hayrama.utils.EnumMessages;
@@ -55,6 +54,20 @@ public class EncryptDecryptController {
     
     @GetMapping("/hashing")
     public ResponseEntity<ReponseHttp> hashing(@RequestBody Map<String, Object> data) {
+        try {
+        	System.out.println("hashing: " + data);
+        	ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),this.hashing512Service.hashString(data.toString()));
+        return new ResponseEntity<>(rep, HttpStatus.OK);
+        } catch (Exception e) {
+                e.printStackTrace();
+                ReponseHttp rep = new ReponseHttp(e.getMessage(),null);
+                return new ResponseEntity<ReponseHttp>(rep, HttpStatus.BAD_REQUEST);
+        }finally {
+        }
+    }
+    
+    @GetMapping("/hashingStandard")
+    public ResponseEntity<ReponseHttp> hashingStandard(@RequestParam String data) {
         try {
         	System.out.println("hashing: " + data);
         	ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),this.hashing512Service.hashString(data.toString()));
