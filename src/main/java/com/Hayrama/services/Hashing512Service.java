@@ -2,8 +2,11 @@ package com.Hayrama.services;
 
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 
 @Service
@@ -30,16 +33,25 @@ public class Hashing512Service {
 	 
 	public boolean verifiyHash(String hashHeading, String body) {
 		try {
+			System.out.println("body: " + body);
             boolean result = false;
             String hashData = hashString(body);
-            System.out.println("data: " + hashData);
-            System.out.println("data: " + hashHeading);
-            System.out.println("compareTo: " + hashHeading.compareTo(hashData));
+            System.out.println("hashHeading: " + hashHeading);
+            System.out.println("hashData: " + hashData);
             if(hashHeading.equals(hashData)) {
             	result = true;
             }
             return result;
         } catch (Exception E) {
+        	throw E;
+        }
+	}
+	
+	public String convertMapToString(Map<String, Object> data) throws Exception {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			return objectMapper.writeValueAsString(data);
+		} catch (Exception E) {
         	throw E;
         }
 	}

@@ -53,7 +53,9 @@ public class TestController{
     @PostMapping("/insert")
     public ResponseEntity<ReponseHttp> insert(@RequestBody Map<String, Object> test,@RequestHeader("Hash") String heading) {
         try{
-        	boolean verifyHash = this.hashing512Service.verifiyHash(heading,test.toString());
+        	String body = this.hashing512Service.convertMapToString(test);
+        	boolean verifyHash = this.hashing512Service.verifiyHash(heading,body);
+        	System.out.println("verifyHash : " + verifyHash);
         	if(verifyHash) {
         		Map<String, Object> object = this.encryptDecryptService.decryptTestStruct(test);
         		Test testObject = new Test();
