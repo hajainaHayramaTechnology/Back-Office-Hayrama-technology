@@ -1,62 +1,62 @@
 package com.Hayrama.models;
  
 import java.sql.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.lang.reflect.Field;
 
-import org.springframework.data.annotation.Id;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import jakarta.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
+@Table(name = "Tests")
 public class Test{
-	
+        
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonProperty("idTest")
+	private Long idTest;
+	
+	@JsonProperty("nom")
 	private String nom;
+	
+	@JsonProperty("date")
 	private Date date;
 	
 	
-
-	public Test() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public Test(int id, String nom, Date date) {
-		super();
-		this.id = id;
-		this.nom = nom;
-		this.date = date;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getNom() {
-		return nom;
-	}
-
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
 	
-	
-	
+	public Map<String, Object> convertsToMap(List<Test> tests, String... attributeNames) {
+        Map<String, Object> result = new HashMap<>();
+        for (Test test : tests) {
+            StringBuilder keyBuilder = new StringBuilder();
+            for (String attributeName : attributeNames) {
+                try {
+                    Field field = Test.class.getDeclaredField(attributeName);
+                    Object value = field.get(test);
+                    keyBuilder.append(value.toString()).append("-");
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+            String key = keyBuilder.toString();
+            if (!key.isEmpty()) {
+                result.put(key, test);
+            }
+        }
+        return result;
+    }
 }
