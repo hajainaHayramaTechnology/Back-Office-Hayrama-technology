@@ -25,12 +25,19 @@ import lombok.NoArgsConstructor;
 @Table(name = "ChatMessage")
 public class ChatMessage{
         
-	@JsonProperty("nickName")
-	private String nickName;
+	@JsonProperty("sender")
+	private String sender;
 	
 	@JsonProperty("content")
 	private String content;
 	
-	@JsonProperty("date")
-	private Date timestamp;
+	@JsonProperty("time")
+	private String time;
+	
+	@JsonProperty("type")
+	MessageType type;
+	
+	public enum MessageType {
+        CHAT, LEAVE, JOIN
+    }
 }
