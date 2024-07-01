@@ -39,7 +39,7 @@ public class TestController{
         try{
 	    	List<Test> tests = this.testService.getAll();
 			List<Map<String, Object>> arrayTest = this.testService.convertTestsToMapArray(tests);
-			System.out.println("arrayTest: " + arrayTest);
+			System.out.println("$$$$$$$$$***********$$$$$$$$$: " + arrayTest);
 			ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),this.encryptDecryptService.encrytObject(arrayTest));
 	        return new ResponseEntity<>(rep, HttpStatus.OK);
         } catch (Exception e) {
@@ -53,19 +53,19 @@ public class TestController{
     @PostMapping("/insert")
     public ResponseEntity<ReponseHttp> insert(@RequestBody Map<String, Object> test,@RequestHeader("Hash") String heading) {
         try{
-        	String body = this.hashing512Service.convertMapToString(test);
+        	/*String body = this.hashing512Service.convertMapToString(test);
         	boolean verifyHash = this.hashing512Service.verifiyHash(heading,body);
         	System.out.println("verifyHash : " + verifyHash);
-        	if(verifyHash) {
+        	if(verifyHash) {*/
         		Map<String, Object> object = this.encryptDecryptService.decryptTestStruct(test);
         		Test testObject = new Test();
         		testObject = this.testService.convertHashMaoToTests(object);
         		this.testService.save(testObject);
         		ReponseHttp rep = new ReponseHttp(EnumMessages.SELECT_SUCCESS.getMessage(),testObject);
         		return new ResponseEntity<>(rep, HttpStatus.OK);
-        	}else {
+        	/*}else {
         		throw new RuntimeException("Hash verification failed please try again");
-        	}
+        	}*/
         } catch (Exception e) {
                 e.printStackTrace();
                 ReponseHttp rep = new ReponseHttp(e.getMessage(),null);

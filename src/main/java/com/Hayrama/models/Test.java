@@ -23,13 +23,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "Tests")
+@Table(name = "tests")
 public class Test{
         
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonProperty("idTest")
-	private Long idTest;
+	@JsonProperty("id_test")
+	private Long id_test;
 	
 	@JsonProperty("nom")
 	private String nom;

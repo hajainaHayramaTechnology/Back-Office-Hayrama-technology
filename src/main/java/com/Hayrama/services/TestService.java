@@ -61,7 +61,7 @@ public class TestService {
 		List<Map<String, Object>> resultList = new ArrayList<>();
         for (Test test : tests) {
             Map<String, Object> testMap = new HashMap<>();
-            testMap.put("id", test.getIdTest());
+            testMap.put("id", test.getId_test());
             testMap.put("nom", test.getNom());
             testMap.put("date", test.getDate());
             System.out.println("testMap: " + testMap);
@@ -82,7 +82,7 @@ public class TestService {
 		test.setDate(new java.sql.Date(utilDate.getTime()));
 		System.out.println("dateObject: " + utilDate);
 		if (object.get("id") instanceof Long) {
-	        test.setIdTest((Long) idObject);
+	        test.setId_test((Long) idObject);
 	    }
         test.setNom((String) object.get("nom"));
         return test;
